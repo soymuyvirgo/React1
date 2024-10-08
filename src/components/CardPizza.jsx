@@ -13,6 +13,7 @@ const CardPizza = ({ pizza, addToCart }) => {
         ))}
       </ul>
       <p>Precio: ${price}</p>
+      {/* Botón para añadir la pizza al cart */}
       <button onClick={() => addToCart(pizza)}>
         Agregar al carrito
       </button>

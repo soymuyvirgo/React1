@@ -49,7 +49,7 @@ export const pizzas = [
     },
   ];
   
-  // Simulación de un carrito de compras
+  // Simulación de un carrito de compras añadiendo las otras pizzas
   export const pizzaCart = [
     {
       id: "P001",
