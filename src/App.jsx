@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
+// App.jsx
+
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Footer from './components/Footer';
@@ -7,28 +9,39 @@ import Header from './components/Header';
 import Register from './components/Register';
 import Login from './components/Login';
 import Cart from './components/Cart';
-import { pizzas } from './assets/js/pizzas.js'; // Importamos pizzas
+import Pizza from './components/Pizza'; // Importa el componente Pizza
 
 function App() {
   const [cart, setCart] = useState([]);
+  const [pizzas, setPizzas] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
-  // Función para agregar una pizza al carrito
+  useEffect(() => {
+    fetch('http://localhost:5000/api/pizzas')
+      .then(response => response.json())
+      .then(data => {
+        setPizzas(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error al obtener las pizzas:', error);
+        setLoading(false);
+      });
+  }, []);
+
   const addToCart = (pizza) => {
     const existingPizza = cart.find((item) => item.id === pizza.id);
     if (existingPizza) {
-      // Si la pizza ya está en el carrito, incrementamos la cantidad
       setCart(
         cart.map((item) =>
           item.id === pizza.id ? { ...item, count: item.count + 1 } : item
         )
       );
     } else {
-      // Si la pizza no está en el carrito, la agregamos con cantidad 1
       setCart([...cart, { ...pizza, count: 1 }]);
     }
   };
 
-  // Función para incrementar la cantidad de una pizza en el carrito
   const increaseCount = (pizzaId) => {
     setCart(
       cart.map((item) =>
@@ -37,7 +50,6 @@ function App() {
     );
   };
 
-  // Función para disminuir la cantidad de una pizza en el carrito
   const decreaseCount = (pizzaId) => {
     setCart(
       cart.reduce((acc, item) => {
@@ -45,7 +57,6 @@ function App() {
           if (item.count > 1) {
             acc.push({ ...item, count: item.count - 1 });
           }
-          // Si la cantidad es 1 y se disminuye, no se agrega al array (se elimina del carrito)
         } else {
           acc.push(item);
         }
@@ -62,7 +73,22 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Home pizzas={pizzas} addToCart={addToCart} />}
+            element={
+              <Home
+                pizzas={pizzas}
+                addToCart={addToCart}
+                loading={loading}
+              />
+            }
+          />
+          {/* Ruta para el detalle de la pizza */}
+          <Route
+            path="/pizza/:id"
+            element={
+              <Pizza
+                addToCart={addToCart}
+              />
+            }
           />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />   
@@ -84,3 +110,4 @@ function App() {
 }
 
 export default App;
+

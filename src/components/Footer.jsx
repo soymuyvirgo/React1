@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer style={footerStyle}>
       <p>© 2021 - Pizzería Alexander! - Todos los derechos reservados</p>
-      <p>Contacto: contacto@pizzeriamammamia.com | Tel: +56 9 1234 5678</p>
+      <p>Contacto: contacto@pizzeriaalexander.com | Tel: +56 9 1234 5678</p>
     </footer>
   );
 };
